@@ -22,10 +22,9 @@ public static class Program
 
         SendRequest(client, json);
 
-        while (true)
-        {
-            Console.ReadLine();
-        }
+        Console.ReadLine();
+
+        client.Close();
     }
 
     private static void SendRequest(TcpClient client, string json)

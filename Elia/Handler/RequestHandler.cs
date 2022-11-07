@@ -15,7 +15,7 @@ namespace Elia.Handler
             MiddlewareChain = middlewareChain;
         }
 
-        public async Task Handle(byte[] receivedData, TcpClient client)
+        public async Task<byte[]> Handle(byte[] receivedData, TcpClient client)
         {
             Console.WriteLine($"Get request with lenght {receivedData.Length} from {client.GetHashCode()}");
 
@@ -30,7 +30,9 @@ namespace Elia.Handler
                 await MiddlewareChain.HandleAsync(context);
             }
 
-            await SendResponse(context.Response, client);
+            string json = JsonSerializer.Serialize(context.Response);
+
+            return Encoding.UTF8.GetBytes(json);
         }
 
         private static Request? DeserialzieRequest(byte[] received)
@@ -38,17 +40,6 @@ namespace Elia.Handler
             string json = Encoding.UTF8.GetString(received);
 
             return JsonSerializer.Deserialize<Request>(json);
-        }
-
-        private static async Task SendResponse(Response response, TcpClient client)
-        {
-            string json = JsonSerializer.Serialize(response);
-
-            Console.WriteLine($"Sending to {client.GetHashCode()} {json}");
-
-            byte[] data = Encoding.UTF8.GetBytes(json);
-
-            await client.GetStream().WriteAsync(data);
         }
     }
 }
