@@ -1,4 +1,4 @@
-﻿using Elia.Handler;
+﻿using Elia.Core;
 using Elia.Network.ReadingLoop;
 using System.Net;
 using System.Net.Sockets;
@@ -12,9 +12,9 @@ namespace Elia.Network
 
         private readonly SynchronizedCollection<Connection> _conections = new();
 
-        public ServerCore(int port, ReadingLoopProvider loopProvider)
+        public ServerCore(ServerConfiguration configuration, ReadingLoopProvider loopProvider)
         {
-            _tcpListener = new TcpListener(IPAddress.Loopback, port);
+            _tcpListener = new TcpListener(IPAddress.Loopback, configuration.Port);
             _loopProvider = loopProvider;
         }
 
