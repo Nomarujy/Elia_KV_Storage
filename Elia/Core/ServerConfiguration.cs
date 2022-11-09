@@ -8,6 +8,6 @@ namespace Elia.Core
 {
     public class ServerConfiguration
     {
-        public int Port { get; set; }
+        public int Port { get; set; } = 8989;
     }
 }
