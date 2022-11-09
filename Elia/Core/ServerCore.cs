@@ -1,5 +1,4 @@
 ﻿using Elia.Core;
-using Elia.Network.ReadingLoop;
 using System.Net;
 using System.Net.Sockets;
 

@@ -1,6 +1,6 @@
 ﻿using System.Net.Sockets;
 
-namespace Elia.Network.ReadingLoop
+namespace Elia.Core
 {
     public abstract class ReadingLoopProvider
     {

@@ -1,4 +1,4 @@
-﻿using Elia.Network.ReadingLoop;
+﻿using Elia.Core;
 using System.Net.Sockets;
 
 namespace Elia.Network
