@@ -1,24 +1,22 @@
-﻿using Elia.Handler.Context;
+﻿using Elia.Core.Handler;
+using Elia.Handler.Context;
 using Elia.Handler.Midlewares;
-using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
 
 namespace Elia.Handler
 {
-    internal class RequestHandler
+    internal class EliaRequestHandler : RequestHandler
     {
         private readonly Middleware MiddlewareChain;
 
-        public RequestHandler(Middleware middlewareChain)
+        public EliaRequestHandler(Middleware middlewareChain)
         {
             MiddlewareChain = middlewareChain;
         }
 
-        public async Task<byte[]> Handle(byte[] receivedData, TcpClient client)
+        public override async Task<byte[]> HandleAsync(byte[] receivedData)
         {
-            Console.WriteLine($"Get request with lenght {receivedData.Length} from {client.GetHashCode()}");
-
             HandlerContext context = new()
             {
                 Request = DeserialzieRequest(receivedData)!,

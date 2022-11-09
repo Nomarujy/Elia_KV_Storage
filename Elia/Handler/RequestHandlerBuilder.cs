@@ -1,12 +1,13 @@
-﻿using Elia.Handler.Midlewares;
+﻿using Elia.Core.Handler;
+using Elia.Handler.Midlewares;
 
 namespace Elia.Handler
 {
-    internal class RequestHandlerBuilder
+    internal class EliaRequestHandlerProvider
     {
         private readonly List<Type> _midlewares;
 
-        public RequestHandlerBuilder()
+        public EliaRequestHandlerProvider()
         {
             _midlewares = new List<Type>()
             {
@@ -18,8 +19,9 @@ namespace Elia.Handler
             _midlewares.Add(typeof(T));
         }
 
-        public RequestHandler Build()
+        public RequestHandler Create()
         {
+            if (_midlewares.Count == 0) throw new InvalidOperationException("No one midlewares defined");
             int lastIndex = _midlewares.Count - 1;
 
             Middleware middlewareChain = CreateMidleware(lastIndex, null);
@@ -29,7 +31,7 @@ namespace Elia.Handler
                 middlewareChain = CreateMidleware(i, middlewareChain);
             }
 
-            return new RequestHandler(middlewareChain);
+            return new EliaRequestHandler(middlewareChain);
         }
 
         private Middleware CreateMidleware(int index, Middleware? next)

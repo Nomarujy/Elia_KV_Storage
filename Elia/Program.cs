@@ -1,19 +1,21 @@
-﻿using Elia.Handler;
+﻿using Elia.Core;
+using Elia.Handler;
 using Elia.Handler.Midlewares;
 using Elia.Network;
+using Elia.Network.ReadingLoop;
 
 public static class Program
 {
     public static void Main()
     {
-        RequestHandlerBuilder requestHandlerBuilder = new();
-        requestHandlerBuilder.AddMidleware<StorageMidleware>();
+        EliaRequestHandlerProvider requestHandlerProvider = new();
+        requestHandlerProvider.AddMidleware<StorageMidleware>();
 
-        var handler = requestHandlerBuilder.Build();
+        var handler = requestHandlerProvider.Create();
 
-        NetworkCore core = new(8989, handler);
+        ServerCore core = new(new ServerConfiguration(), new GenericLoop(handler));
 
-        core.Start();
+        core.StartAsync();
 
         while (true)
         {
