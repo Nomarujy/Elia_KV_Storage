@@ -1,9 +1,6 @@
-﻿using Elia.Storage;
-
-namespace Elia.Handler.Context
+﻿namespace EliaLib.Entity
 {
-    [Serializable]
-    internal class Response
+    public class Response
     {
         public string Status { get; set; } = null!;
 

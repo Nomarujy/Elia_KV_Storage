@@ -1,8 +1,8 @@
-﻿using Elia.Storage;
+﻿using EliaLib;
 
-namespace Elia.Handler.Context
+namespace EliaLib.Entity
 {
-    internal class Request
+    public class Request
     {
         public ValuePath? ValuePath { get; set; }
         public ValueEntity? ValueEntity { get; set; }

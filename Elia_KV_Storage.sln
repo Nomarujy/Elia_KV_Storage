@@ -5,7 +5,9 @@ VisualStudioVersion = 17.3.32929.385
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Elia", "Elia\Elia.csproj", "{90B6F165-B51D-4364-8B20-8E8765BB25C8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestRequest", "TestRequest\TestRequest.csproj", "{22AD488B-FF4F-4639-BC9A-5611E09477B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestRequest", "TestRequest\TestRequest.csproj", "{22AD488B-FF4F-4639-BC9A-5611E09477B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EliaLib", "EliaLib\EliaLib.csproj", "{DCF02C93-2508-41D6-A359-520866CEC72F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{22AD488B-FF4F-4639-BC9A-5611E09477B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22AD488B-FF4F-4639-BC9A-5611E09477B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22AD488B-FF4F-4639-BC9A-5611E09477B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DCF02C93-2508-41D6-A359-520866CEC72F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DCF02C93-2508-41D6-A359-520866CEC72F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DCF02C93-2508-41D6-A359-520866CEC72F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DCF02C93-2508-41D6-A359-520866CEC72F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

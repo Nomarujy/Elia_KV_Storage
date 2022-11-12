@@ -4,22 +4,20 @@ using Elia.Handler.Midlewares;
 using Elia.Network;
 using Elia.Network.ReadingLoop;
 
-public static class Program
+namespace Elia
 {
-    public static void Main()
+    public static class Program
     {
-        EliaRequestHandlerProvider requestHandlerProvider = new();
-        requestHandlerProvider.AddMidleware<StorageMidleware>();
-
-        var handler = requestHandlerProvider.Create();
-
-        ServerCore core = new(new ServerConfiguration(), new GenericLoop(handler));
-
-        core.StartAsync();
-
-        while (true)
+        public static void Main()
         {
-            Console.ReadLine();
+            EliaRequestHandlerProvider requestHandlerProvider = new();
+            requestHandlerProvider.AddMidleware<StorageMidleware>();
+
+            var handler = requestHandlerProvider.Create();
+
+            ServerCore core = new(new ServerConfiguration(), new GenericLoop(handler));
+
+            core.StartAsync().Wait();
         }
     }
 }

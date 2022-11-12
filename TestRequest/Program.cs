@@ -1,77 +1,54 @@
-﻿using Elia.Handler.Context;
+﻿using EliaLib;
+using EliaLib.Entity;
 using System.Net;
-using System.Net.Sockets;
-using System.Text;
-using System.Text.Json;
 
-public static class Program
+namespace Elia
 {
-    static void Main(string[] args)
+    public static class Program
     {
-        var client = new TcpClient();
-        client.Connect(IPAddress.Loopback, 8989);
-
-        var json = PostJson();
-
-        SendRequest(client, json);
-
-        Thread.Sleep(5000);
-        Console.WriteLine("SLEEp");
-
-        json = GetJson();
-
-        SendRequest(client, json);
-
-        Console.ReadLine();
-
-        client.Close();
-    }
-
-    private static void SendRequest(TcpClient client, string json)
-    {
-        byte[] data = Encoding.UTF8.GetBytes(json);
-
-        byte[] lenght = BitConverter.GetBytes(data.Length);
-
-        client.GetStream()
-            .WriteAsync(lenght);
-
-        client.GetStream()
-            .WriteAsync(data);
-    }
-
-    private static string GetJson()
-    {
-        Request request = new()
+        public static void Main()
         {
-            ValuePath = new()
-            {
-                Application = "App",
-                Topic = "Topic",
-                Key = "Key",
-            },
+            EliaClient client = new(new IPEndPoint(IPAddress.Loopback, 8989));
+
+            SaveValue(client).Wait();
+
+            ReadValue(client).Wait();
+
+            Console.ReadLine();
+        }
+
+        private readonly static ValuePath path = new()
+        {
+            Application = "Elia",
+            Topic = "SuperTopic",
+            Key = "SecretKey",
         };
 
-        return JsonSerializer.Serialize(request);
-    }
-
-    private static string PostJson()
-    {
-        Request request = new()
+        private static async Task SaveValue(EliaClient client)
         {
-            ValuePath = new()
+            ValueEntity entity = new()
             {
-                Application = "App",
-                Topic = "Topic",
-                Key = "Key",
-            },
-            ValueEntity = new()
-            {
-                Value = "SomeValue",
-                Timestamp = DateTime.Now,
-            },
-        };
+                Timestamp= DateTime.Now,
+                Value = "Hello world",
+            };
+            var response = await client.SaveValue(path, entity);
 
-        return JsonSerializer.Serialize(request);
+            if (response is not null)
+            {
+                Console.WriteLine(response.Status);
+            }
+        }
+
+        private static async Task ReadValue(EliaClient client)
+        {
+            var response = await client.ReadValue(path);
+
+            if (response is not null)
+            {
+                Console.WriteLine(response.Status);
+                Console.WriteLine(response.Value!.Value);
+                Console.WriteLine(response.Value!.Timestamp);
+            }
+        }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace Elia.Handler.Context
+﻿using EliaLib.Entity;
+
+namespace Elia.Handler.Context
 {
     internal class HandlerContext
     {

@@ -1,4 +1,6 @@
-﻿namespace Elia.Storage
+﻿using EliaLib.Entity;
+
+namespace Elia.Storage
 {
     internal class StorageCore
     {

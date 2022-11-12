@@ -1,4 +1,5 @@
-﻿using System.Collections.Concurrent;
+﻿using EliaLib.Entity;
+using System.Collections.Concurrent;
 
 namespace Elia.Storage.Base
 {

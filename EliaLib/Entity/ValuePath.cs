@@ -1,7 +1,6 @@
-﻿namespace Elia.Storage
+﻿namespace EliaLib.Entity
 {
-    [Serializable]
-    internal class ValuePath
+    public class ValuePath
     {
         public string Application { get; set; } = null!;
         public string Topic { get; set; } = null!;

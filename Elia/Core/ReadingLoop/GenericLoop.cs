@@ -23,7 +23,7 @@ namespace Elia.Network.ReadingLoop
 
                 var response = await _handler.HandleAsync(content);
 
-                await client.GetStream().WriteAsync(response);
+                await SendResponse(client, response);
             }
         }
 
@@ -43,6 +43,15 @@ namespace Elia.Network.ReadingLoop
             await client.GetStream().ReadAsync(buffer);
 
             return buffer;
+        }
+
+        private async Task SendResponse(TcpClient client, byte[] data)
+        {
+            int lenght = data.Length;
+            var byteLenght = BitConverter.GetBytes(lenght);
+
+            await client.GetStream().WriteAsync(byteLenght);
+            await client.GetStream().WriteAsync(data);
         }
     }
 }

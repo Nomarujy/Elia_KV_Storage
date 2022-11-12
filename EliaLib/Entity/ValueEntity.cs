@@ -1,7 +1,6 @@
-﻿namespace Elia.Storage
+﻿namespace EliaLib.Entity
 {
-    [Serializable]
-    internal class ValueEntity
+    public class ValueEntity
     {
         public string Value { get; set; } = null!;
         public DateTime Timestamp { get; set; } 
