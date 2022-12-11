@@ -13,10 +13,10 @@ namespace EliaLib.Utilites
             return Encoding.UTF8.GetBytes(json);
         }
 
-        public static Request? Deserialize(byte[] data)
+        public static Request Deserialize(byte[] data)
         {
             var json = Encoding.UTF8.GetString(data);
-            return JsonSerializer.Deserialize<Request>(json);
+            return JsonSerializer.Deserialize<Request>(json)!;
         }
     }
 }

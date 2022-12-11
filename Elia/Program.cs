@@ -1,8 +1,5 @@
-﻿using Elia.Core;
-using Elia.Handler;
-using Elia.Handler.Midlewares;
-using Elia.Network;
-using Elia.Network.ReadingLoop;
+﻿using Elia.Midlewares;
+using Elia.Midlewares.Builder;
 
 namespace Elia
 {
@@ -10,14 +7,13 @@ namespace Elia
     {
         public static void Main()
         {
-            EliaRequestHandlerProvider requestHandlerProvider = new();
-            requestHandlerProvider.AddMidleware<StorageMidleware>();
+            MidlewareBuilder builder = new MidlewareBuilder();
+            builder.Add<StorageMidleware>();
+            var midleware = builder.Build();
 
-            var handler = requestHandlerProvider.Create();
-
-            ServerCore core = new(new ServerConfiguration(), new GenericLoop(handler));
-
-            core.StartAsync().Wait();
+            ServerCore serverCore = new(midleware);
+            serverCore.Start()
+                .Wait();
         }
     }
 }

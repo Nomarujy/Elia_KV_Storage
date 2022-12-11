@@ -4,6 +4,6 @@
     {
         public string Status { get; set; } = null!;
 
-        public ValueEntity? Value { get; set; }
+        public StorageValue? Value { get; set; }
     }
 }

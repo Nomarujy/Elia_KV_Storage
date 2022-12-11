@@ -1,99 +1,60 @@
 ﻿using EliaLib.Entity;
+using EliaLib.Network;
 using EliaLib.Utilites;
-using System.Net;
 using System.Net.Sockets;
-using System.Text.Json;
 
 namespace EliaLib
 {
-    public class EliaClient : IDisposable
+    public class EliaClient
     {
         private readonly TcpClient _client;
 
-        public EliaClient(IPEndPoint IP)
+        public EliaClient(string host, int port)
         {
-            _client = new TcpClient();
-            _client.Connect(IP);
+            _client = new(host, port);
         }
 
-        public async Task<Response?> SaveValue(ValuePath path, ValueEntity value)
+        public async Task<Response> SaveAsync(StorageKey key, StorageValue value)
         {
-            var request = new Request()
-            {
-                ValuePath = path,
-                ValueEntity = value,
-            };
-            
+            var request = CreateRequestMessage(key, value);
+            await SendRequest(request);
+            return await GetResponse();
+        }
+
+        public async Task<Response> GetAsync(StorageKey key)
+        {
+            var request = CreateRequestMessage(key, null);
             await SendRequest(request);
 
-            return await ReadResponse();
+            return await GetResponse();
         }
 
-        public async Task<Response?> ReadValue(ValuePath path)
+        private NetworkMessage CreateRequestMessage(StorageKey key, StorageValue? value)
         {
-            var request = new Request()
+            Request request = new()
             {
-                ValuePath = path,
+                Key = key,
+                Value = value
             };
 
-            await SendRequest(request);
-
-            return await ReadResponse();
+            return NetworkMessageSerializer.Serialize(request);
         }
 
-        private void ThrowIfDisconected()
+        private async Task SendRequest(NetworkMessage message)
         {
-            if (!_client.Connected)
-            {
-                throw new ObjectDisposedException(nameof(_client));
-            } 
+            var stream = _client.GetStream();
+
+            await stream.WriteAsync(message.Lenght);
+            await stream.WriteAsync(message.Body);
         }
 
-        private async Task SendRequest(Request request)
+        private async Task<Response> GetResponse()
         {
-            var data = RequestSerializer.Serialzie(request);
+            var stream = _client.GetStream();
 
-            int lenght = data.Length;
+            var response = await NetworkMessageSerializer.DeserializeAsync(stream);
 
-            var byteLenght = BitConverter.GetBytes(lenght);
-
-            ThrowIfDisconected();
-
-            await _client.GetStream().WriteAsync(byteLenght);
-            await _client.GetStream().WriteAsync(data);
-        }
-
-        private async Task<Response?> ReadResponse()
-        {
-            ThrowIfDisconected();
-
-            byte[] header = await ReadBytes(4);
-
-            int contentLenght = BitConverter.ToInt32(header);
-
-            byte[] body = await ReadBytes(contentLenght);
-
-            return ResponseSerializer.Deserialize(body);
-        }
-
-        private async Task<byte[]> ReadBytes(int count)
-        {
-            byte[] buffer = new byte[count];
-
-            await _client.GetStream().ReadAsync(buffer);
-
-            return buffer;
-        }
-
-        private bool _disposed;
-        public void Dispose()
-        {
-            GC.SuppressFinalize(this);
-     
-            if (!_disposed)
-            {
-                _disposed = true;
-            }
+            return ResponseSerializer.Deserialize(response.Body);
         }
     }
 }

@@ -1,53 +1,54 @@
 ﻿using EliaLib;
 using EliaLib.Entity;
-using System.Net;
 
-namespace Elia
+namespace TestRequest
 {
     public static class Program
     {
         public static void Main()
         {
-            EliaClient client = new(new IPEndPoint(IPAddress.Loopback, 8989));
-
-            SaveValue(client).Wait();
-
-            ReadValue(client).Wait();
+            Test().Wait();
 
             Console.ReadLine();
         }
 
-        private readonly static ValuePath path = new()
+        private async static Task Test()
         {
-            Application = "Elia",
-            Topic = "SuperTopic",
-            Key = "SecretKey",
-        };
+            string host = "127.0.0.1";
+            EliaClient client = new(host, 8558);
 
-        private static async Task SaveValue(EliaClient client)
-        {
-            ValueEntity entity = new()
+            StorageKey key = new()
             {
-                Timestamp= DateTime.Now,
-                Value = "Hello world",
+                App = "First",
+                Topic = "Nomar",
+                Name = "Secret",
             };
-            var response = await client.SaveValue(path, entity);
-
-            if (response is not null)
+            StorageValue value = new()
             {
-                Console.WriteLine(response.Status);
+                Value = "Hello"
+            };
+
+            var response = await client.GetAsync(key);
+            ShowResponse(response);
+
+            response = await client.SaveAsync(key, value);
+            ShowResponse(response);
+
+            while (true)
+            {
+                Console.ReadLine();
+
+                response = await client.GetAsync(key);
+                ShowResponse(response);
             }
         }
 
-        private static async Task ReadValue(EliaClient client)
+        private static void ShowResponse(Response response)
         {
-            var response = await client.ReadValue(path);
-
-            if (response is not null)
+            Console.WriteLine(response.Status);
+            if (response.Value is not null)
             {
-                Console.WriteLine(response.Status);
-                Console.WriteLine(response.Value!.Value);
-                Console.WriteLine(response.Value!.Timestamp);
+                Console.WriteLine(response.Value.Value);
             }
         }
     }
